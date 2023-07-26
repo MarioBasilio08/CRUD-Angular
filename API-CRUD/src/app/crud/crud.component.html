@@ -1,0 +1,135 @@
+<div class="pt-3 bg-a p-1" style="--bs-bg-opacity: .3;">
+  <h1 class="text-center">CRUD conectado a un servicio WCF</h1>
+  <div class="container text-center">
+    <div class="row">
+      <div class="col">
+        <div class="container text-center">
+          <form [formGroup]="formCustomer">
+            <div class="row border-top border-start border-dark">
+              <div class="col-2 border-bottom border-dark">Nombre</div>
+              <div class="col border-end border-start border-dark">
+                <input  formControlName="name" type="text" class="form-control" placeholder="Andres" aria-label="Id">
+
+                <div class="text-danger" *ngIf="formCustomer.get('name')?.hasError('required')&& formCustomer.get('name')?.touched">
+                  *El nombre es requerido.
+                </div>
+
+                <div class="text-danger" *ngIf="formCustomer.get('name')?.hasError('pattern')">
+                  *El nombre es inválido.
+                </div>
+
+              </div>
+            </div>
+
+            <div class="row border-start border-dark">
+              <div class="col-2 border-bottom border-dark">Edad</div>
+              <div class="col border-end border-start border-dark">
+                <input formControlName="age"  type="text" class="form-control" placeholder="20" aria-label="Id">
+
+                <div class="text-danger" *ngIf="formCustomer.get('age')?.hasError('required') && formCustomer.get('age')?.touched">
+                  *La edad es requerida.
+                </div>
+
+                <div class="text-danger" *ngIf="formCustomer.get('age')?.hasError('pattern')">
+                  *La edad es inválida.
+                </div>
+
+              </div>
+            </div>
+
+            <div class="row border-start border-bottom border-dark ">
+              <div class="col-2">Email</div>
+              <div class="col border-end border-start border-dark">
+                <input formControlName="email" type="text" class="form-control" placeholder="andres@gmail.com" aria-label="Id">
+
+                <div class="text-danger" *ngIf="formCustomer.get('email')?.hasError('required')&& formCustomer.get('email')?.touched">
+                  *El email es requerido.
+                </div>
+
+                <div class="text-danger" *ngIf="formCustomer.get('email')?.hasError('pattern')">
+                  *El email es inválido.
+                </div>
+
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-2">
+        <div class="container text-center">
+          <div class="row">
+            <div class="col">
+              <button [disabled]="formCustomer.invalid" (click)="saveBD()" type="submit" class="btn btn-success mb-1">Guardar BD</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button (click)="nuevo()" type="button" class="btn btn-primary mt-1 mb-1">Nuevo</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button [disabled]="id == null || id == 0" (click)="deleteCustomer()" type="button" class="btn btn-danger mt-1">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-2 bg-v pt-1 rounded-3" style="--bs-bg-opacity: .6;">
+    <div class="row me-5 ms-5 mt-4">
+      <div class="col-3">
+          <input [(ngModel)]="listFilter" type="text" class="form-control" id="filterInput" placeholder="Ingrese Id a filtrar">
+      </div>
+      <div class="col-3">
+        <button (click)="obtenerPorId(listFilter)" type="button" class="btn btn-warning" [disabled]="!listFilter">Filtrar</button>
+      </div>
+      <div class="col">
+          <div *ngIf='listFilter' class="form-text text-muted text-body-emphasis">Filtrado por ID: {{listFilter}}</div>
+      </div>
+      <div class="col-3" *ngIf="listFilter">
+        <button (click)="borrarFiltro()" type="button" class="btn btn-danger">Borrar Filtrado</button>
+      </div>
+
+    </div>
+
+    <div class="row me-5 ms-5 mt-1">
+      <table class="table table-striped border border-dark" *ngIf="hayRegistros(); else sinarticulos">
+        <thead>
+          <tr  class="table-primary">
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Edad</th>
+            <th scope="col">Email</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr [ngClass]="{'table-danger': i == selectRow}" *ngFor="let customer of customerList | paginate
+          : {
+              itemsPerPage: tableSize,
+              currentPage: page,
+              totalItems: count
+            };
+      let i = index" (click) = "saveId(customer.id, i)" (dblclick)="editCustomer(customer)" >
+            <th scope="row">{{customer.id}} </th>
+            <td>{{customer.name}}</td>
+            <td>{{customer.age}}</td>
+            <td>{{customer.email}}</td>
+          </tr>
+        <tbody>
+      </table>
+      <div class="d-flex justify-content-center">
+        <pagination-controls
+          previousLabel="Prev"
+          nextLabel="Next"
+          (pageChange)="onTableDataChange($event)"
+        >
+        </pagination-controls>
+      </div>
+      <ng-template #sinarticulos><p>No hay articulos.</p></ng-template>
+    </div>
+  </div>
+</div>

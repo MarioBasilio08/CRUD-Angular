@@ -1,0 +1,14 @@
+.bg-a {
+  --bs-bg-opacity: 1;
+  background-color: rgba(48, 74, 149, var(--bs-bg-opacity)) !important;
+}
+
+.bg-r {
+  --bs-bg-opacity: 1;
+  background-color: rgba(225, 26, 41, var(--bs-bg-opacity)) !important;
+}
+
+.bg-v {
+  --bs-bg-opacity: 1;
+  background-color: rgba(101, 175, 48, var(--bs-bg-opacity)) !important;
+}
